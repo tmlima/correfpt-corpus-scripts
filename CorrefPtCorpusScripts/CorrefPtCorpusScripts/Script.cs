@@ -9,32 +9,30 @@ namespace CorrefPtCorpusScripts
 {
     public class Script
     {
-        public int AnalizeText(XmlDocument document)
+        public Text AnalizeText(XmlDocument document, string textName)
         {
-            int distinctRelationsFound = 0;
+            Text text = new Text(textName);
             XmlNodeList cadeias = document.SelectNodes("//Cadeias/*");
             foreach (XmlNode chain in cadeias)
             {
-                distinctRelationsFound += AnalizeChain(chain);
+                text.Chains.Add(AnalizeChain(chain));
             }
 
-            return distinctRelationsFound;
+            return text;
         }
 
-        private int AnalizeChain(XmlNode chain)
+        private Chain AnalizeChain(XmlNode chainXml)
         {
-            XmlNodeList snNodes = chain.SelectNodes("sn");
+            XmlNodeList snNodes = chainXml.SelectNodes("sn");
             List<string> heads = new List<string>();
             foreach (XmlNode sn in snNodes)
             {
                 heads.Add(sn.Attributes["nucleo"].Value);
             }
 
-            int distinctHeads = heads.Distinct().Count();
-            if (distinctHeads > 0)
-                return distinctHeads - 1;
-            else
-                throw new Exception();
+            Chain chains = new Chain(chainXml.Name);
+            chains.Heads.AddRange(heads.Distinct());
+            return chains;
         }
     }
 }
