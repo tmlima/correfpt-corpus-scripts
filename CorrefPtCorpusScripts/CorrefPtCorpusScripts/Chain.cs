@@ -13,7 +13,7 @@ namespace CorrefPtCorpusScripts
             Heads = new List<string>();
         }
 
-        public int DistinctHeads()
+        public int IndirectHeads()
         {
             if (Heads.Count > 0)
                 return this.Heads.Count - 1;

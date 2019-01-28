@@ -23,6 +23,9 @@ namespace CorrefPtCorpusScripts
             }
 
             Print(texts);
+
+            Console.WriteLine( "Noun phrase quantity [" + texts.Sum( x => x.NounPhraseQuantity ) + "]" );
+            Console.WriteLine( "Indirect relationships [" + texts.Sum( x => x.Chains.Sum( y => y.IndirectHeads() ) ) + "]" );
             TextsWithMoreDistinctHeads( texts );
             TextsWithMoreChainsWithAtLeastOneDistinctHead( texts );
 
@@ -35,7 +38,7 @@ namespace CorrefPtCorpusScripts
         {
             foreach (Text t in texts)
             {
-                Console.WriteLine("Distinct heads: " + t.Chains.Sum(x => x.DistinctHeads()));
+                Console.WriteLine("Distinct heads: " + t.Chains.Sum(x => x.IndirectHeads()));
                 Console.WriteLine(t.Name);
                 foreach (Chain c in t.Chains)
                     Console.WriteLine(c.Id + " : " + "[" + string.Join("][", c.Heads) + "]");
@@ -45,15 +48,15 @@ namespace CorrefPtCorpusScripts
         static void TextsWithMoreDistinctHeads( List<Text> texts )
         {
             Console.WriteLine( "Texts with more distinct heads" );
-            texts = texts.OrderByDescending( x => x.Chains.Sum( y => y.DistinctHeads() ) ).Take( 3 ).ToList();
+            texts = texts.OrderByDescending( x => x.Chains.Sum( y => y.IndirectHeads() ) ).Take( 3 ).ToList();
             foreach ( Text t in texts )
-                Console.WriteLine( "Text [" + t.Name + "]: " + t.Chains.Sum( x => x.DistinctHeads() ) );
+                Console.WriteLine( "Text [" + t.Name + "]: " + t.Chains.Sum( x => x.IndirectHeads() ) );
         }
 
         static void TextsWithMoreChainsWithAtLeastOneDistinctHead( List<Text> texts )
         {
             Console.WriteLine( "Texts with more chains containing at least one distinct head" );
-            Func<Chain, bool> chainWithAtLeastOneDistinctHead = y => y.DistinctHeads() > 0;
+            Func<Chain, bool> chainWithAtLeastOneDistinctHead = y => y.IndirectHeads() > 0;
             texts = texts.OrderByDescending( x => x.Chains.Where( chainWithAtLeastOneDistinctHead ).Count() ).Take( 3 ).ToList();
             foreach ( Text t in texts )
                 Console.WriteLine( "Text [" + t.Name + "]: " + t.Chains.Where( chainWithAtLeastOneDistinctHead ).Count() );

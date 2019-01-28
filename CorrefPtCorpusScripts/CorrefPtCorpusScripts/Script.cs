@@ -12,6 +12,7 @@ namespace CorrefPtCorpusScripts
         public Text AnalizeText(XmlDocument document, string textName)
         {
             Text text = new Text(textName);
+            text.NounPhraseQuantity = document.SelectNodes( "//Cadeias//sn" ).Count;
             XmlNodeList cadeias = document.SelectNodes("//Cadeias/*");
             foreach (XmlNode chain in cadeias)
             {

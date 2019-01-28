@@ -6,6 +6,7 @@ namespace CorrefPtCorpusScripts
     {
         public string Name { get; set; }
         public List<Chain> Chains { get; set; }
+        public int NounPhraseQuantity { get; set; }
 
         public Text(string name)
         {
